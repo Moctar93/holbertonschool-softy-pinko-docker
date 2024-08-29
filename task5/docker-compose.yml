@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  backend:
+    build: ./back-end
+    expose:
+      - "5252"  # Internal Docker port, no external mapping
+
+  frontend:
+    build: ./front-end
+    expose:
+      - "9000"  # Internal Docker port, no external mapping
+    depends_on:
+      - backend
+
+  proxy:
+    build:
+      context: ./proxy
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - frontend
+      - backend
+
