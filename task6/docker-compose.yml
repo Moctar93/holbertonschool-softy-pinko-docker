@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  backend:
+    build: ./back-end
+    expose:
+      - "5252"
+    deploy:
+      replicas: 2  # Scale to 2 replicas
+    ports:
+      - "5252"  # This should be removed if you don't need to expose it to the host machine
+
+  frontend:
+    build: ./front-end
+    expose:
+      - "9000"
+    depends_on:
+      - backend
+
+  proxy:
+    build:
+      context: ./proxy
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - frontend
+      - backend
+
